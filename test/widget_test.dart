@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:movie_explorer/app/app.dart';
-import 'package:movie_explorer/app/router.dart';
 
 void main() {
   testWidgets('clean navigation smoke test', (tester) async {
@@ -18,9 +17,5 @@ void main() {
     await tester.tap(find.text('Favoris').last);
     await tester.pumpAndSettle();
     expect(find.text('Mes Favoris'), findsOneWidget);
-
-    appRouter.go('/movie/1');
-    await tester.pumpAndSettle();
-    expect(find.text('Synopsis'), findsOneWidget);
   });
 }

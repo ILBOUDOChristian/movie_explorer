@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../data/quick_action_repository.dart';
 import '../models/movie.dart';
 import '../widgets/rating_stars.dart';
 
@@ -12,7 +11,12 @@ class QuickActionsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final actions = QuickActionRepository.actions;
+    final actions = [
+      (Icons.movie_outlined, 'Tous les films', 'movies'),
+      (Icons.favorite_border, 'Mes favoris', 'favorites'),
+      (Icons.add_circle_outline, 'Ajouter', 'add-movie'),
+      (Icons.settings_outlined, 'Paramètres', 'settings'),
+    ];
 
     return GridView.builder(
       shrinkWrap: true,
@@ -29,14 +33,14 @@ class QuickActionsGrid extends StatelessWidget {
         return Card(
           child: InkWell(
             borderRadius: BorderRadius.circular(16),
-            onTap: () => navigator.goNamed(action.routeName),
+            onTap: () => navigator.goNamed(action.$3),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(action.icon, color: Theme.of(context).colorScheme.primary),
+                Icon(action.$1, color: Theme.of(context).colorScheme.primary),
                 const SizedBox(width: 8),
                 Flexible(
-                  child: Text(action.label, overflow: TextOverflow.ellipsis),
+                  child: Text(action.$2, overflow: TextOverflow.ellipsis),
                 ),
               ],
             ),
