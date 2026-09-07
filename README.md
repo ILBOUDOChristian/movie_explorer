@@ -12,6 +12,18 @@ Application Flutter de découverte et de gestion de films. Elle propose une bibl
 - Thème clair, sombre ou système
 - Interface responsive pour mobile, tablette et navigateur
 
+## Critères techniques
+
+- 5 écrans principaux et une page détail dédiée
+- Navigation nommée avec GoRouter et branches persistantes
+- Recherche, filtre par catégorie et affichage liste ou grille
+- Détail accessible avec le paramètre de route `/movie/:id`
+- Formulaire validé avec titre, réalisateur, année et catégorie
+- Thèmes clair, sombre et système avec Provider
+- Widgets réutilisables dans `lib/widgets/`
+- Données séparées dans `lib/data/` et modèles dans `lib/models/`
+- Mise en page responsive mobile, tablette et desktop
+
 ## Aperçu
 
 Les captures sont regroupées dans [docs/screenshots](docs/screenshots).
