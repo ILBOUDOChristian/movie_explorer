@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 
 class MovieFormHeader extends StatelessWidget {
-  const MovieFormHeader({super.key});
+  final String title;
+  final String subtitle;
+
+  const MovieFormHeader({
+    super.key,
+    required this.title,
+    required this.subtitle,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,16 +39,13 @@ class MovieFormHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Nouveau film',
+                  title,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 2),
-                Text(
-                  'Remplissez le formulaire pour ajouter un film à votre collection.',
-                  style: theme.textTheme.bodySmall,
-                ),
+                Text(subtitle, style: theme.textTheme.bodySmall),
               ],
             ),
           ),

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../app/app_routes.dart';
+import '../data/movie_repository.dart';
 import '../providers/movie_provider.dart';
 import '../widgets/category_chip.dart';
+import '../widgets/empty_state_view.dart';
 import '../widgets/movie_card.dart';
 import '../widgets/responsive_shell.dart';
 
@@ -16,12 +20,39 @@ class MoviesScreen extends StatefulWidget {
 class _MoviesScreenState extends State<MoviesScreen> {
   late TextEditingController _searchController;
   bool _isGridView = true;
+  String? _appliedRouteQuery;
+  String? _appliedRouteCategory;
 
   @override
   void initState() {
     super.initState();
     final provider = context.read<MovieProvider>();
     _searchController = TextEditingController(text: provider.searchQuery);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final params = GoRouterState.of(context).uri.queryParameters;
+    final query = params[AppRoutes.searchQuery];
+    final category = params[AppRoutes.categoryQuery];
+
+    if (query != null && query != _appliedRouteQuery) {
+      _appliedRouteQuery = query;
+      _searchController.text = query;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        context.read<MovieProvider>().updateSearchQuery(query);
+      });
+    }
+
+    if (category != null && category != _appliedRouteCategory) {
+      _appliedRouteCategory = category;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        context.read<MovieProvider>().updateCategory(category);
+      });
+    }
   }
 
   @override
@@ -110,17 +141,22 @@ class _MoviesScreenState extends State<MoviesScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  '${filtered.length} film${filtered.length > 1 ? 's' : ''} trouvé${filtered.length > 1 ? 's' : ''}',
-                  style: theme.textTheme.labelLarge,
+                Flexible(
+                  child: Text(
+                    '${filtered.length} film${filtered.length > 1 ? 's' : ''} trouvé${filtered.length > 1 ? 's' : ''}',
+                    style: theme.textTheme.labelLarge,
+                  ),
                 ),
                 if (movieProvider.searchQuery.isNotEmpty ||
-                    movieProvider.selectedCategory != 'Tous')
+                    movieProvider.selectedCategory !=
+                        MovieRepository.allCategoryLabel)
                   TextButton.icon(
                     onPressed: () {
                       _searchController.clear();
                       movieProvider.updateSearchQuery('');
-                      movieProvider.updateCategory('Tous');
+                      movieProvider.updateCategory(
+                        MovieRepository.allCategoryLabel,
+                      );
                     },
                     icon: const Icon(Icons.refresh, size: 18),
                     label: const Text('Réinitialiser'),
@@ -132,7 +168,11 @@ class _MoviesScreenState extends State<MoviesScreen> {
         if (filtered.isEmpty)
           SliverFillRemaining(
             hasScrollBody: false,
-            child: _buildEmptyState(context, theme),
+            child: const EmptyStateView(
+              icon: Icons.movie_creation_outlined,
+              title: 'Aucun film trouvé',
+              message: 'Essayez de modifier vos critères de recherche',
+            ),
           )
         else if (_isGridView)
           SliverPadding(
@@ -164,46 +204,4 @@ class _MoviesScreenState extends State<MoviesScreen> {
     );
   }
 
-  Widget _buildEmptyState(BuildContext context, ThemeData theme) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer.withValues(
-                  alpha: 0.5,
-                ),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.movie_creation_outlined,
-                size: 48,
-                color: theme.colorScheme.primary,
-              ),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              'Aucun film trouvé',
-              style: theme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Essayez de modifier vos critères de recherche',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

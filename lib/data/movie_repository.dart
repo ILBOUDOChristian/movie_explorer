@@ -134,8 +134,10 @@ class MovieRepository {
     ),
   ];
 
+  static const String allCategoryLabel = 'Tous';
+
   static const List<String> categories = [
-    'Tous',
+    allCategoryLabel,
     'Action',
     'Aventure',
     'Science-fiction',
@@ -145,8 +147,11 @@ class MovieRepository {
     'Horreur',
   ];
 
+  static String get defaultCategory =>
+      categories.firstWhere((category) => category != allCategoryLabel);
+
   static List<Movie> getAll() {
-    return movies;
+    return List<Movie>.from(movies);
   }
 
   static Movie? getById(String id) {
@@ -171,7 +176,7 @@ class MovieRepository {
   }
 
   static List<Movie> filterByCategory(String category) {
-    if (category == 'Tous') {
+    if (category == allCategoryLabel) {
       return movies;
     }
     return movies.where((movie) => movie.category == category).toList();

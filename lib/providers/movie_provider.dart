@@ -8,7 +8,7 @@ class MovieProvider extends ChangeNotifier {
   final Set<String> _favoriteIds = {};
   final List<Movie> _customMovies = [];
   String _searchQuery = '';
-  String _selectedCategory = 'Tous';
+  String _selectedCategory = MovieRepository.allCategoryLabel;
 
   List<Movie> get movies => _movies;
   List<Movie> get customMovies => _customMovies;
@@ -24,7 +24,7 @@ class MovieProvider extends ChangeNotifier {
   List<Movie> get filteredMovies {
     List<Movie> results = allMovies;
 
-    if (_selectedCategory != 'Tous') {
+    if (_selectedCategory != MovieRepository.allCategoryLabel) {
       results = results.where((m) => m.category == _selectedCategory).toList();
     }
 

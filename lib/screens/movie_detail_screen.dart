@@ -2,23 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../app/app_routes.dart';
+import '../models/movie.dart';
 import '../providers/movie_provider.dart';
+import '../widgets/info_chip.dart';
 import '../widgets/rating_stars.dart';
 
 class MovieDetailScreen extends StatelessWidget {
   final String movieId;
+  final Movie? initialMovie;
 
-  const MovieDetailScreen({super.key, required this.movieId});
+  const MovieDetailScreen({
+    super.key,
+    required this.movieId,
+    this.initialMovie,
+  });
 
   @override
   Widget build(BuildContext context) {
     final movieProvider = context.watch<MovieProvider>();
-    final movie = movieProvider.getById(movieId);
+    final movie = movieProvider.getById(movieId) ?? initialMovie;
     final isFav = movieProvider.isFavorite(movieId);
 
     if (movie == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Film introuvable')),
+        appBar: AppBar(
+          title: const Text('Film introuvable'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => _leaveDetail(context),
+          ),
+        ),
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(24),
@@ -33,7 +47,7 @@ class MovieDetailScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
-                  onPressed: () => context.pop(),
+                  onPressed: () => _leaveDetail(context),
                   child: const Text('Retour'),
                 ),
               ],
@@ -62,6 +76,10 @@ class MovieDetailScreen extends StatelessWidget {
                 expandedHeight: heroHeight,
                 pinned: true,
                 stretch: true,
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => _leaveDetail(context),
+                ),
                 actions: [
                   IconButton(
                     icon: Icon(
@@ -146,19 +164,16 @@ class MovieDetailScreen extends StatelessWidget {
                             spacing: 12,
                             runSpacing: 8,
                             children: [
-                              _buildInfoChip(
-                                context,
+                              InfoChip(
                                 icon: Icons.person_outline,
                                 label: movie.director,
                               ),
-                              _buildInfoChip(
-                                context,
+                              InfoChip(
                                 icon: Icons.calendar_today,
                                 label: '${movie.year}',
                               ),
                               if (movie.duration > 0)
-                                _buildInfoChip(
-                                  context,
+                                InfoChip(
                                   icon: Icons.schedule,
                                   label: '${movie.duration} min',
                                 ),
@@ -234,26 +249,11 @@ class MovieDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoChip(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-  }) {
-    final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 18, color: theme.colorScheme.onSurfaceVariant),
-          const SizedBox(width: 6),
-          Text(label, style: theme.textTheme.labelMedium),
-        ],
-      ),
-    );
+  void _leaveDetail(BuildContext context) {
+    if (context.canPop()) {
+      context.pop();
+    } else {
+      AppRoutes.goHome(context);
+    }
   }
 }

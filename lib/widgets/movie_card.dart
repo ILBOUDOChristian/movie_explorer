@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../app/app_routes.dart';
 import '../models/movie.dart';
 import '../providers/movie_provider.dart';
 import 'rating_stars.dart';
@@ -20,8 +20,7 @@ class MovieCard extends StatelessWidget {
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () =>
-            context.goNamed('movie-detail', pathParameters: {'id': movie.id}),
+        onTap: () => AppRoutes.pushMovieDetail(context, movie.id, movie: movie),
         child: useGridLayout
             ? _buildGridCard(context, theme, isFavorite)
             : _buildListCard(context, theme, isFavorite),

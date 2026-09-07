@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../app/app_routes.dart';
+import '../data/movie_repository.dart';
 import '../models/movie.dart';
 import '../providers/movie_provider.dart';
-import '../data/movie_repository.dart';
 import '../widgets/movie_form_header.dart';
 
 class AddMovieScreen extends StatefulWidget {
@@ -21,7 +21,7 @@ class _AddMovieScreenState extends State<AddMovieScreen> {
   final _descriptionController = TextEditingController();
   final _imageUrlController = TextEditingController();
   final _durationController = TextEditingController();
-  String _selectedCategory = 'Science-fiction';
+  String _selectedCategory = MovieRepository.defaultCategory;
   double _rating = 5.0;
   @override
   void dispose() {
@@ -54,7 +54,11 @@ class _AddMovieScreenState extends State<AddMovieScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const MovieFormHeader(),
+                  const MovieFormHeader(
+                    title: 'Nouveau film',
+                    subtitle:
+                        'Remplissez le formulaire pour ajouter un film à votre collection.',
+                  ),
                   const SizedBox(height: 28),
                   TextFormField(
                     controller: _titleController,
@@ -129,7 +133,7 @@ class _AddMovieScreenState extends State<AddMovieScreen> {
                       prefixIcon: Icon(Icons.category),
                     ),
                     items: MovieRepository.categories
-                        .where((c) => c != 'Tous')
+                        .where((c) => c != MovieRepository.allCategoryLabel)
                         .map(
                           (cat) =>
                               DropdownMenuItem(value: cat, child: Text(cat)),
@@ -236,9 +240,10 @@ class _AddMovieScreenState extends State<AddMovieScreen> {
                               action: SnackBarAction(
                                 label: 'Voir',
                                 textColor: Colors.white,
-                                onPressed: () => context.pushNamed(
-                                  'movie-detail',
-                                  pathParameters: {'id': movie.id},
+                                onPressed: () => AppRoutes.pushMovieDetail(
+                                  context,
+                                  movie.id,
+                                  movie: movie,
                                 ),
                               ),
                             ),
@@ -251,7 +256,7 @@ class _AddMovieScreenState extends State<AddMovieScreen> {
                           _imageUrlController.clear();
                           _durationController.clear();
                           setState(() {
-                            _selectedCategory = 'Science-fiction';
+                            _selectedCategory = MovieRepository.defaultCategory;
                             _rating = 5.0;
                           });
                         } else {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/movie_provider.dart';
@@ -6,8 +7,17 @@ import '../providers/theme_provider.dart';
 import '../theme/app_theme.dart';
 import 'router.dart';
 
-class MovieExplorerApp extends StatelessWidget {
-  const MovieExplorerApp({super.key});
+class MovieExplorerApp extends StatefulWidget {
+  const MovieExplorerApp({super.key, this.router});
+
+  final GoRouter? router;
+
+  @override
+  State<MovieExplorerApp> createState() => _MovieExplorerAppState();
+}
+
+class _MovieExplorerAppState extends State<MovieExplorerApp> {
+  late final GoRouter _router = widget.router ?? createAppRouter();
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +33,7 @@ class MovieExplorerApp extends StatelessWidget {
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
           themeMode: themeProvider.themeMode,
-          routerConfig: appRouter,
+          routerConfig: _router,
         ),
       ),
     );

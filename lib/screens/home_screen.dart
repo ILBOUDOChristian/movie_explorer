@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../app/app_routes.dart';
+import '../data/app_navigation.dart';
 import '../models/movie.dart';
 import '../providers/movie_provider.dart';
-import '../widgets/home_section_widgets.dart';
 import '../widgets/movie_card.dart';
+import '../widgets/quick_actions_grid.dart';
 import '../widgets/responsive_shell.dart';
+import '../widgets/section_header.dart';
+import '../widgets/top_rated_card.dart';
 
 /// Ecran d'accueil compose de sections basees sur [CustomScrollView].
 class HomeScreen extends StatelessWidget {
@@ -97,7 +100,7 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                'Decouvrez des films exceptionnels',
+                'Découvrez des films exceptionnels',
                 style: theme.textTheme.titleSmall?.copyWith(
                   color: Colors.white.withValues(alpha: 0.85),
                 ),
@@ -120,30 +123,20 @@ class HomeScreen extends StatelessWidget {
             color: theme.colorScheme.surface,
             borderRadius: BorderRadius.circular(14),
             elevation: 2,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(14),
-              onTap: () => context.goNamed('movies'),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.search,
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        'Rechercher un film, realisateur, genre...',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ),
-                  ],
+            child: TextField(
+              textInputAction: TextInputAction.search,
+              onSubmitted: (value) =>
+                  AppRoutes.goMovies(context, query: value),
+              decoration: InputDecoration(
+                hintText: 'Rechercher un film, réalisateur, genre...',
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
+                border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                contentPadding: const EdgeInsets.symmetric(vertical: 12),
               ),
             ),
           ),
@@ -160,7 +153,7 @@ class HomeScreen extends StatelessWidget {
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
-        child: QuickActionsGrid(navigator: context),
+        child: QuickActionsGrid(actions: AppNavigationData.quickActions),
       ),
     );
   }
@@ -183,7 +176,7 @@ class HomeScreen extends StatelessWidget {
             icon: Icons.star_rate_rounded,
             title: 'Top notes',
             buttonLabel: 'Voir tout',
-            onButtonTap: () => context.goNamed('movies'),
+            onButtonTap: () => AppRoutes.goMovies(context),
           ),
         ),
       ),
@@ -220,7 +213,7 @@ class HomeScreen extends StatelessWidget {
           icon: Icons.local_movies,
           title: 'Tous les films',
           buttonLabel: 'Explorer',
-          onButtonTap: () => context.goNamed('movies'),
+          onButtonTap: () => AppRoutes.goMovies(context),
         ),
       ),
     );

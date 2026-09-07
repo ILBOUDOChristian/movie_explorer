@@ -1,32 +1,53 @@
 # Movie Explorer
 
-Application Flutter de découverte et de gestion de films. Elle propose une bibliothèque locale, la recherche, les catégories, les favoris, l'ajout de films et un thème clair ou sombre.
+Application Flutter multi-écrans de découverte et de gestion de films : bibliothèque, recherche, catégories, favoris, formulaire d’ajout et thème clair / sombre.
 
-## Fonctionnalités
+## Conformité au brief
 
-- Consultation des films et des mieux notés
-- Recherche par titre, réalisateur ou catégorie
-- Affichage en liste ou en grille
-- Ajout de films personnalisés
-- Gestion des favoris
-- Thème clair, sombre ou système
-- Interface responsive pour mobile, tablette et navigateur
+| Exigence | Implémentation |
+| --- | --- |
+| Au moins 4 écrans | Accueil, Films, Détail, Ajout, Favoris, Paramètres |
+| GoRouter / Navigator 2.0, routes nommées | `lib/app/router.dart` + `lib/app/app_routes.dart` |
+| Liste + recherche / filtrage | Écran Films (`q` et `category` en query) |
+| Détail + paramètres | `/movie/:id` (path) + objet `Movie` via `extra` |
+| Formulaire ≥ 3 champs validés | Titre, réalisateur, année, catégorie |
+| Thème clair / sombre | Clair, sombre, système (`ThemeProvider`) |
+| ≥ 8 widgets Flutter | `ListView`, `GridView`, `Stack`, `Card`, `CustomScrollView`, `Form`, `Slider`, `NavigationRail`, `Wrap`, `SliverAppBar`… |
+| ≥ 3 widgets dans `widgets/` | `MovieCard`, `CategoryChip`, `RatingStars`, `QuickActionsGrid`, `EmptyStateView`, etc. |
+| Responsive mobile / tablette | `ResponsiveShell` (barre bas vs `NavigationRail`) |
+| Données hors des widgets | `lib/data/` + `MovieProvider` |
+| README, captures, lancement | Ce fichier + `docs/screenshots/` |
+
+## Navigation (GoRouter)
+
+| Nom | Chemin | Paramètres |
+| --- | --- | --- |
+| `home` | `/` | — |
+| `movies` | `/movies` | query `q`, `category` |
+| `add-movie` | `/add-movie` | — |
+| `favorites` | `/favorites` | — |
+| `settings` | `/settings` | — |
+| `movie-detail` | `/movie/:id` | path `id` + `extra` (film) |
+| `not-found` | `/404` | — |
+
+Le détail est **empilé** (`pushNamed`) sur le navigateur racine : le retour (`pop`) retrouve l’écran précédent. Un `goNamed` vers `/movie/:id` sans pile ramène à l’accueil.
 
 ## Aperçu
 
-Les captures sont regroupées dans [docs/screenshots](docs/screenshots).
+Les captures sont dans [docs/screenshots](docs/screenshots).
 
 | Accueil | Bibliothèque | Détail d'un film |
 | --- | --- | --- |
-| ![Accueil](docs/screenshots/Accueil.png) | ![Bibliothèque](docs/screenshots/Biblioth%C3%A8que.png) | ![Détail](docs/screenshots/Detail.png) |
+| ![Accueil](docs/screenshots/Accueil.png) | ![Bibliothèque](docs/screenshots/Bibliotheque.png) | ![Détail](docs/screenshots/Detail.png) |
+
+| Formulaire | Favoris | Thème sombre |
+| --- | --- | --- |
+| ![Ajouter](docs/screenshots/Ajouter.png) | ![Favoris](docs/screenshots/Favoris.png) | ![Sombre](docs/screenshots/Sombre.png) |
 
 ## Prérequis
 
-- Flutter stable
-- Dart inclus avec Flutter
-- Chrome pour le lancement web ou un émulateur Android/iOS
-
-Vérifiez l'installation avec :
+- Flutter stable (SDK indiqué dans `pubspec.yaml`)
+- Chrome, un émulateur, ou un appareil physique
 
 ```bash
 flutter doctor
@@ -42,19 +63,12 @@ flutter pub get
 
 ## Lancement
 
-Pour lancer l'application dans Chrome :
-
 ```bash
+flutter devices
 flutter run -d chrome
 ```
 
-Pour afficher les appareils disponibles :
-
-```bash
-flutter devices
-```
-
-Puis lancez l'application sur l'appareil choisi :
+Ou sur un appareil listé :
 
 ```bash
 flutter run -d <device-id>
@@ -67,19 +81,17 @@ flutter analyze
 flutter test
 ```
 
-L'analyse peut encore signaler des avertissements de dépréciation selon la version de Flutter utilisée; aucune erreur de compilation ne doit rester.
-
 ## Structure
 
 ```text
 lib/
-	app/          Navigation et composition de l'application
-	data/         Données initiales des films
-	models/       Modèles métier
-	providers/    État des films et du thème
-	screens/      Écrans principaux
-	theme/        Thèmes Material
-	widgets/      Composants réutilisables
+  app/          GoRouter, noms de routes, MaterialApp
+  data/         Films, catégories, destinations de navigation
+  models/       Modèle Movie
+  providers/    État films + thème
+  screens/      Écrans
+  theme/        Thèmes Material 3
+  widgets/      Composants réutilisables (sans données métier)
 ```
 
 ## Licence
