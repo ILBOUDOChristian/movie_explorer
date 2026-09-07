@@ -132,10 +132,14 @@ class HomeScreen extends StatelessWidget {
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
                     const SizedBox(width: 12),
-                    Text(
-                      'Rechercher un film, realisateur, genre...',
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
+                    Expanded(
+                      child: Text(
+                        'Rechercher un film, realisateur, genre...',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ),
                   ],
@@ -190,7 +194,7 @@ class HomeScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             scrollDirection: Axis.horizontal,
             itemCount: topMovies.length,
-            separatorBuilder: (_, _i) => const SizedBox(width: 16),
+            separatorBuilder: (context, index) => const SizedBox(width: 16),
             itemBuilder: (ctx, i) => SizedBox(
               width: 200,
               child: TopRatedCard(movie: topMovies[i], rank: i + 1),
@@ -227,7 +231,7 @@ class HomeScreen extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
       sliver: SliverList.separated(
         itemCount: allMovies.take(5).length,
-        separatorBuilder: (_, _i) => const SizedBox(height: 12),
+        separatorBuilder: (context, index) => const SizedBox(height: 12),
         itemBuilder: (ctx, i) => MovieCard(movie: allMovies[i]),
       ),
     );

@@ -14,10 +14,11 @@ Application Flutter de découverte et de gestion de films. Elle propose une bibl
 
 ## Aperçu
 
-Les captures sont regroupées dans [docs/screenshots](docs/screenshots). 
+Les captures sont regroupées dans [docs/screenshots](docs/screenshots).
+
 | Accueil | Bibliothèque | Détail d'un film |
 | --- | --- | --- |
-|![Accueil.png](docs/screenshots/Accueil.png) | ![Bibliothèque.png](docs/screenshots/Biblioth%C3%A8que.png)liothèque] | ![Detail.png](docs/screenshots/Detail.png)] |
+| ![Accueil](docs/screenshots/Accueil.png) | ![Bibliothèque](docs/screenshots/Biblioth%C3%A8que.png) | ![Détail](docs/screenshots/Detail.png) |
 
 ## Prérequis
 

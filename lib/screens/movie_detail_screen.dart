@@ -83,7 +83,7 @@ class MovieDetailScreen extends StatelessWidget {
                       Image.network(
                         movie.imageUrl,
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) {
+                        errorBuilder: (context, error, stackTrace) {
                           return Container(
                             color: theme.colorScheme.surfaceContainerHighest,
                             child: Icon(
@@ -102,7 +102,7 @@ class MovieDetailScreen extends StatelessWidget {
                             colors: [
                               Colors.transparent,
                               Colors.transparent,
-                              theme.colorScheme.surface.withOpacity(0.3),
+                              theme.colorScheme.surface.withValues(alpha: 0.3),
                               theme.colorScheme.surface,
                             ],
                             stops: const [0, 0.5, 0.8, 1],

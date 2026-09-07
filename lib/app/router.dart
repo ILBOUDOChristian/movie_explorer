@@ -9,69 +9,73 @@ import '../screens/movies_screen.dart';
 import '../screens/settings_screen.dart';
 import '../widgets/responsive_shell.dart';
 
-final GlobalKey<NavigatorState> _rootNavigatorKey =
-    GlobalKey<NavigatorState>(debugLabel: 'root');
-final GlobalKey<NavigatorState> _shellNavigatorKey =
-    GlobalKey<NavigatorState>(debugLabel: 'shell');
+final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(
+  debugLabel: 'root',
+);
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
   navigatorKey: _rootNavigatorKey,
+  errorBuilder: (context, state) => _RouteErrorScreen(error: state.error),
   routes: [
-    ShellRoute(
-      navigatorKey: _shellNavigatorKey,
-      builder: (context, state, child) {
-        final path = state.uri.toString();
-        int index = 0;
-        if (path.startsWith('/movies')) {
-          index = 1;
-        } else if (path.startsWith('/add-movie')) {
-          index = 2;
-        } else if (path.startsWith('/favorites')) {
-          index = 3;
-        } else if (path.startsWith('/settings')) {
-          index = 4;
-        }
-        return _ShellWrapper(
-          initialIndex: index,
-          child: child,
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) {
+        return ResponsiveShell(
+          currentIndex: navigationShell.currentIndex,
+          onTap: navigationShell.goBranch,
+          child: navigationShell,
         );
       },
-      routes: [
-        GoRoute(
-          path: '/',
-          name: 'home',
-          pageBuilder: (context, state) => const NoTransitionPage(
-            child: HomeScreen(),
-          ),
+      branches: [
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/',
+              name: 'home',
+              pageBuilder: (context, state) =>
+                  const NoTransitionPage(child: HomeScreen()),
+            ),
+          ],
         ),
-        GoRoute(
-          path: '/movies',
-          name: 'movies',
-          pageBuilder: (context, state) => const NoTransitionPage(
-            child: MoviesScreen(),
-          ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/movies',
+              name: 'movies',
+              pageBuilder: (context, state) =>
+                  const NoTransitionPage(child: MoviesScreen()),
+            ),
+          ],
         ),
-        GoRoute(
-          path: '/add-movie',
-          name: 'add-movie',
-          pageBuilder: (context, state) => const NoTransitionPage(
-            child: AddMovieScreen(),
-          ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/add-movie',
+              name: 'add-movie',
+              pageBuilder: (context, state) =>
+                  const NoTransitionPage(child: AddMovieScreen()),
+            ),
+          ],
         ),
-        GoRoute(
-          path: '/favorites',
-          name: 'favorites',
-          pageBuilder: (context, state) => const NoTransitionPage(
-            child: FavoritesScreen(),
-          ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/favorites',
+              name: 'favorites',
+              pageBuilder: (context, state) =>
+                  const NoTransitionPage(child: FavoritesScreen()),
+            ),
+          ],
         ),
-        GoRoute(
-          path: '/settings',
-          name: 'settings',
-          pageBuilder: (context, state) => const NoTransitionPage(
-            child: SettingsScreen(),
-          ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/settings',
+              name: 'settings',
+              pageBuilder: (context, state) =>
+                  const NoTransitionPage(child: SettingsScreen()),
+            ),
+          ],
         ),
       ],
     ),
@@ -80,74 +84,47 @@ final GoRouter appRouter = GoRouter(
       name: 'movie-detail',
       parentNavigatorKey: _rootNavigatorKey,
       builder: (context, state) {
-        final movieId = state.pathParameters['id']!;
-        return MovieDetailScreen(movieId: movieId);
+        return MovieDetailScreen(movieId: state.pathParameters['id']!);
       },
     ),
   ],
 );
 
-class _ShellWrapper extends StatefulWidget {
-  final int initialIndex;
-  final Widget child;
+class _RouteErrorScreen extends StatelessWidget {
+  final GoException? error;
 
-  const _ShellWrapper({
-    required this.initialIndex,
-    required this.child,
-  });
-
-  @override
-  State<_ShellWrapper> createState() => _ShellWrapperState();
-}
-
-class _ShellWrapperState extends State<_ShellWrapper> {
-  late int _currentIndex;
-
-  @override
-  void initState() {
-    super.initState();
-    _currentIndex = widget.initialIndex;
-  }
-
-  @override
-  void didUpdateWidget(_ShellWrapper oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.initialIndex != widget.initialIndex) {
-      setState(() {
-        _currentIndex = widget.initialIndex;
-      });
-    }
-  }
-
-  void _onTap(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-    switch (index) {
-      case 0:
-        context.goNamed('home');
-        break;
-      case 1:
-        context.goNamed('movies');
-        break;
-      case 2:
-        context.goNamed('add-movie');
-        break;
-      case 3:
-        context.goNamed('favorites');
-        break;
-      case 4:
-        context.goNamed('settings');
-        break;
-    }
-  }
+  const _RouteErrorScreen({this.error});
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveShell(
-      currentIndex: _currentIndex,
-      onTap: _onTap,
-      child: widget.child,
+    return Scaffold(
+      appBar: AppBar(title: const Text('Page introuvable')),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.error_outline, size: 64),
+              const SizedBox(height: 16),
+              const Text(
+                'Cette page n existe pas.',
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              FilledButton.icon(
+                onPressed: () => context.goNamed('home'),
+                icon: const Icon(Icons.home_outlined),
+                label: const Text('Retour a l accueil'),
+              ),
+              if (error != null) ...[
+                const SizedBox(height: 12),
+                Text(error.toString(), textAlign: TextAlign.center),
+              ],
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

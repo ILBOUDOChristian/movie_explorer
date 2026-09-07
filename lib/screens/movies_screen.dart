@@ -87,7 +87,8 @@ class _MoviesScreenState extends State<MoviesScreen> {
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       itemCount: movieProvider.categories.length,
-                      separatorBuilder: (_, __) => const SizedBox(width: 8),
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(width: 8),
                       itemBuilder: (context, index) {
                         final cat = movieProvider.categories[index];
                         return CategoryChip(
@@ -143,15 +144,9 @@ class _MoviesScreenState extends State<MoviesScreen> {
                 crossAxisSpacing: 16,
                 childAspectRatio: 2 / 3.3,
               ),
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return MovieCard(
-                    movie: filtered[index],
-                    useGridLayout: true,
-                  );
-                },
-                childCount: filtered.length,
-              ),
+              delegate: SliverChildBuilderDelegate((context, index) {
+                return MovieCard(movie: filtered[index], useGridLayout: true);
+              }, childCount: filtered.length),
             ),
           )
         else
@@ -159,7 +154,7 @@ class _MoviesScreenState extends State<MoviesScreen> {
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
             sliver: SliverList.separated(
               itemCount: filtered.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
+              separatorBuilder: (context, index) => const SizedBox(height: 12),
               itemBuilder: (context, index) {
                 return MovieCard(movie: filtered[index]);
               },
@@ -180,7 +175,9 @@ class _MoviesScreenState extends State<MoviesScreen> {
               width: 100,
               height: 100,
               decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer.withOpacity(0.5),
+                color: theme.colorScheme.primaryContainer.withValues(
+                  alpha: 0.5,
+                ),
                 shape: BoxShape.circle,
               ),
               child: Icon(

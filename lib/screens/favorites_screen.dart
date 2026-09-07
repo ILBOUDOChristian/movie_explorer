@@ -36,8 +36,9 @@ class FavoritesScreen extends StatelessWidget {
                       width: 120,
                       height: 120,
                       decoration: BoxDecoration(
-                        color:
-                            theme.colorScheme.tertiaryContainer.withOpacity(0.5),
+                        color: theme.colorScheme.tertiaryContainer.withValues(
+                          alpha: 0.5,
+                        ),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -83,8 +84,9 @@ class FavoritesScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color:
-                          theme.colorScheme.tertiaryContainer.withOpacity(0.4),
+                      color: theme.colorScheme.tertiaryContainer.withValues(
+                        alpha: 0.4,
+                      ),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Row(
@@ -147,7 +149,8 @@ class FavoritesScreen extends StatelessWidget {
                   )
                 : SliverList.separated(
                     itemCount: favorites.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 12),
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 12),
                     itemBuilder: (context, index) =>
                         MovieCard(movie: favorites[index]),
                   ),

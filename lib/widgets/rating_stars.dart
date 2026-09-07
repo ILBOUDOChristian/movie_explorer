@@ -27,22 +27,13 @@ class RatingStars extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         for (int i = 0; i < fullStars; i++)
-          Icon(
-            Icons.star,
-            size: size,
-            color: starColor,
-          ),
-        if (hasHalfStar)
-          Icon(
-            Icons.star_half,
-            size: size,
-            color: starColor,
-          ),
+          Icon(Icons.star, size: size, color: starColor),
+        if (hasHalfStar) Icon(Icons.star_half, size: size, color: starColor),
         for (int i = 0; i < emptyStars; i++)
           Icon(
             Icons.star_border,
             size: size,
-            color: starColor.withOpacity(0.4),
+            color: starColor.withValues(alpha: 0.4),
           ),
         if (showValue) ...[
           const SizedBox(width: 8),

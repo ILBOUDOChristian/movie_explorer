@@ -74,7 +74,7 @@ class MovieCard extends StatelessWidget {
         Image.network(
           movie.imageUrl,
           fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) => Container(
+          errorBuilder: (context, error, stackTrace) => Container(
             color: theme.colorScheme.surfaceContainerHighest,
             child: Icon(
               Icons.movie,
@@ -88,7 +88,7 @@ class MovieCard extends StatelessWidget {
           right: 8,
           child: Consumer<MovieProvider>(
             builder: (context, provider, _) => Material(
-              color: theme.colorScheme.surface.withOpacity(0.85),
+              color: theme.colorScheme.surface.withValues(alpha: 0.85),
               shape: const CircleBorder(),
               child: IconButton(
                 visualDensity: VisualDensity.compact,

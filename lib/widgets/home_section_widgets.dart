@@ -106,7 +106,7 @@ class TopRatedCard extends StatelessWidget {
             Image.network(
               movie.imageUrl,
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(
+              errorBuilder: (context, error, stackTrace) => Container(
                 color: theme.colorScheme.surfaceContainerHighest,
                 child: const Icon(Icons.movie, size: 48),
               ),
@@ -116,7 +116,10 @@ class TopRatedCard extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [Colors.transparent, Colors.black.withOpacity(0.8)],
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withValues(alpha: 0.8),
+                  ],
                 ),
               ),
             ),

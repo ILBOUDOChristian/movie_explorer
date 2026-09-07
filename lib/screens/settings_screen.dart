@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/theme_provider.dart';
 import '../providers/movie_provider.dart';
+
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
   @override
@@ -57,9 +58,8 @@ class SettingsScreen extends StatelessWidget {
                                 children: [
                                   Text(
                                     'Thème de l\'application',
-                                    style: theme.textTheme.titleMedium?.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                    style: theme.textTheme.titleMedium
+                                        ?.copyWith(fontWeight: FontWeight.w600),
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
@@ -70,7 +70,9 @@ class SettingsScreen extends StatelessWidget {
                               ),
                             ),
                             IconButton(
-                              icon: Icon(_getToggleIcon(themeProvider.themeMode)),
+                              icon: Icon(
+                                _getToggleIcon(themeProvider.themeMode),
+                              ),
                               onPressed: themeProvider.toggleTheme,
                             ),
                           ],
@@ -78,21 +80,25 @@ class SettingsScreen extends StatelessWidget {
                         const SizedBox(height: 16),
                         const Divider(),
                         const SizedBox(height: 16),
-                        ...ThemeMode.values.map((mode) {
-                          return RadioListTile<ThemeMode>(
-                            value: mode,
-                            groupValue: themeProvider.themeMode,
-                            onChanged: (val) {
-                              if (val != null) {
-                                themeProvider.setThemeMode(val);
-                              }
-                            },
-                            title: Text(_themeLabel(mode)),
-                            subtitle: Text(_themeDescription(mode)),
-                            secondary: Icon(_getModeIcon(mode)),
-                            activeColor: theme.colorScheme.primary,
-                          );
-                        }),
+                        RadioGroup<ThemeMode>(
+                          groupValue: themeProvider.themeMode,
+                          onChanged: (value) {
+                            if (value != null) {
+                              themeProvider.setThemeMode(value);
+                            }
+                          },
+                          child: Column(
+                            children: ThemeMode.values.map((mode) {
+                              return RadioListTile<ThemeMode>(
+                                value: mode,
+                                title: Text(_themeLabel(mode)),
+                                subtitle: Text(_themeDescription(mode)),
+                                secondary: Icon(_getModeIcon(mode)),
+                                activeColor: theme.colorScheme.primary,
+                              );
+                            }).toList(),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -112,7 +118,8 @@ class SettingsScreen extends StatelessWidget {
                         context,
                         icon: Icons.movie,
                         title: 'Total des films',
-                        subtitle: '${movieProvider.allMovies.length} films dans la bibliothèque',
+                        subtitle:
+                            '${movieProvider.allMovies.length} films dans la bibliothèque',
                         trailing: Text(
                           '${movieProvider.allMovies.length}',
                           style: theme.textTheme.titleMedium?.copyWith(
@@ -126,7 +133,8 @@ class SettingsScreen extends StatelessWidget {
                         context,
                         icon: Icons.favorite,
                         title: 'Favoris',
-                        subtitle: '${movieProvider.favoriteMovies.length} films sauvegardés',
+                        subtitle:
+                            '${movieProvider.favoriteMovies.length} films sauvegardés',
                         trailing: Text(
                           '${movieProvider.favoriteMovies.length}',
                           style: theme.textTheme.titleMedium?.copyWith(
@@ -140,7 +148,8 @@ class SettingsScreen extends StatelessWidget {
                         context,
                         icon: Icons.category,
                         title: 'Catégories disponibles',
-                        subtitle: '${movieProvider.categories.length - 1} genres référencés',
+                        subtitle:
+                            '${movieProvider.categories.length - 1} genres référencés',
                         trailing: Text(
                           '${movieProvider.categories.length - 1}',
                           style: theme.textTheme.titleMedium?.copyWith(
@@ -223,6 +232,7 @@ class SettingsScreen extends StatelessWidget {
       ],
     );
   }
+
   Widget _buildListTile(
     BuildContext context, {
     required IconData icon,
@@ -239,11 +249,7 @@ class SettingsScreen extends StatelessWidget {
           color: theme.colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Icon(
-          icon,
-          size: 20,
-          color: theme.colorScheme.primary,
-        ),
+        child: Icon(icon, size: 20, color: theme.colorScheme.primary),
       ),
       title: Text(
         title,
@@ -255,6 +261,7 @@ class SettingsScreen extends StatelessWidget {
       trailing: trailing,
     );
   }
+
   String _themeLabel(ThemeMode mode) {
     switch (mode) {
       case ThemeMode.light:
@@ -265,6 +272,7 @@ class SettingsScreen extends StatelessWidget {
         return 'Système';
     }
   }
+
   String _themeDescription(ThemeMode mode) {
     switch (mode) {
       case ThemeMode.light:
@@ -275,6 +283,7 @@ class SettingsScreen extends StatelessWidget {
         return 'Synchroniser avec les paramètres du système';
     }
   }
+
   IconData _getModeIcon(ThemeMode mode) {
     switch (mode) {
       case ThemeMode.light:
@@ -285,6 +294,7 @@ class SettingsScreen extends StatelessWidget {
         return Icons.settings_brightness;
     }
   }
+
   IconData _getToggleIcon(ThemeMode mode) {
     switch (mode) {
       case ThemeMode.light:

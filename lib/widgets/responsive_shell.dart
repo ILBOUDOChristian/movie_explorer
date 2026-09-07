@@ -76,8 +76,8 @@ class ResponsiveShell extends StatelessWidget {
               onDestinationSelected: onTap,
               extended: isDesktop,
               minExtendedWidth: 220,
-              backgroundColor:
-                  theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+              backgroundColor: theme.colorScheme.surfaceContainerHighest
+                  .withValues(alpha: 0.3),
               leading: isDesktop
                   ? Padding(
                       padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
@@ -152,8 +152,7 @@ class ResponsiveShell extends StatelessWidget {
             Expanded(
               child: Center(
                 child: ConstrainedBox(
-                  constraints:
-                      const BoxConstraints(maxWidth: _maxContentWidth),
+                  constraints: const BoxConstraints(maxWidth: _maxContentWidth),
                   child: child,
                 ),
               ),
